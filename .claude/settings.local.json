@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pdftotext \"/Users/mac/Downloads/SourceCode/ThreeWeekNightmare/legacy_docs/TRILISKA PRODUCT REQUIREMENTS DOCUMENT \\(PRD\\) v2.3.pdf\" -)",
+      "Bash(pdftotext \"/Users/mac/Downloads/SourceCode/ThreeWeekNightmare/legacy_docs/Triliska_TRD_v1.1.pdf\" -)",
+      "Bash(pdftotext \"/Users/mac/Downloads/SourceCode/ThreeWeekNightmare/legacy_docs/Odoo → Middleware Integration Module v1.0.pdf\" -)"
+    ]
+  }
+}

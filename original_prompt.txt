@@ -1,0 +1,48 @@
+Role & Objective
+You are an elite Senior Business Analyst and Enterprise Software Architect. We are defining the requirements and architecture for "TriLiska," a massive hybrid tax compliance and business management ecosystem for MSMEs in Ghana.
+
+CRITICAL INSTRUCTION REGARDING ATTACHED DOCUMENTS
+I have provided three legacy documents (TRD v1.1, PRD v2.3, and an Odoo Integration Doc). These documents contain conflicting architectural visions. You must extract the functional business rules (e.g., how Ghana tax works, UI requirements, what Susu is) from these PDFs, but you MUST STRICTLY IGNORE their architectural constraints.
+
+The New "Hybrid Architecture" Rules
+Read the CLAUDE.md file in this directory. It contains the absolute, unchangeable architectural rules for this project (Odoo Master, NestJS Gateway, Flutter Offline, React/Vue Portal). Treat CLAUDE.md as your supreme source of truth.
+
+Your Task & The Subagent Workflow
+Your objective is to write the definitive "TriLiska Master System Architecture & Product Requirements Document" section by section, saving each section as a separate markdown file in the /docs directory.
+
+You will act as the "Mastermind." For each section, I want you to spawn a subagent to explore the legacy PDFs, gather the relevant business logic, and draft the content.
+
+Terminology & Tone Constraint:
+You must strictly use the Ghanaian domain terminology found in the documents (e.g., GRA, Susu, TIN, Modified Tax System, NHIL, GETFund). Do not invent generic equivalents. Maintain a highly professional, authoritative, and concise tone appropriate for an Enterprise PRD. Use markdown tables and bullet points for scannability.
+
+Table of Contents:
+
+Executive Summary & Product Vision
+
+User Personas & Role Matrix
+
+High-Level System Architecture
+
+Core Platform Responsibilities
+
+Feature Modules & Business Logic
+
+Database Schema & Data Dictionary
+
+Offline Sync Strategy & Conflict Resolution
+
+Security & Compliance
+
+Sprint Plan & Delivery Milestones
+
+Action Required NOW:
+
+Acknowledge these rules and confirm you understand the new architecture.
+
+Create the /docs directory if it does not exist.
+
+Delegate to a subagent to draft Section 1 and Section 2.
+
+Write the results to docs/01_Executive_Summary.md and docs/02_User_Personas.md.
+
+Stop and ask for my approval before proceeding to Section 3.
