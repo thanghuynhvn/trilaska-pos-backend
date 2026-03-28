@@ -2,47 +2,62 @@ Role & Objective
 You are an elite Senior Business Analyst and Enterprise Software Architect. We are defining the requirements and architecture for "TriLiska," a massive hybrid tax compliance and business management ecosystem for MSMEs in Ghana.
 
 CRITICAL INSTRUCTION REGARDING ATTACHED DOCUMENTS
-I have provided three legacy documents (TRD v1.1, PRD v2.3, and an Odoo Integration Doc). These documents contain conflicting architectural visions. You must extract the functional business rules (e.g., how Ghana tax works, UI requirements, what Susu is) from these PDFs, but you MUST STRICTLY IGNORE their architectural constraints.
+I have provided the reference document (TRD v1.1). The document contains an older architectural vision. You must extract the functional business rules (e.g., how Ghana tax works, UI requirements, what Susu is, receipt formatting) from this PDF, but you MUST OVERRIDE the architecture with the new "Hybrid Architecture" defined below.
 
-The New "Hybrid Architecture" Rules
-Read the CLAUDE.md file in this directory. It contains the absolute, unchangeable architectural rules for this project (Odoo Master, NestJS Gateway, Flutter Offline, React/Vue Portal). Treat CLAUDE.md as your supreme source of truth.
+The New "Hybrid Architecture" Rules (The Single Source of Truth)
+You must build the documentation strictly around this new architecture:
 
-Your Task & The Subagent Workflow
-Your objective is to write the definitive "TriLiska Master System Architecture & Product Requirements Document" section by section, saving each section as a separate markdown file in the /docs directory.
+ERPNext Master (System of Record): ERPNext replaces the monolithic Python/FastAPI backend mentioned in the TRD. It handles Master Authentication (SSO) and acts as the central database. It holds standard modules and custom modules we will build for Susu and Loans. The ERPNext Website is the detailed dashboard for MSME owners.
 
-You will act as the "Mastermind." For each section, I want you to spawn a subagent to explore the legacy PDFs, gather the relevant business logic, and draft the content.
+Node.js POS Gateway (BFF): Acts as a Backend-for-Frontend and a "shock absorber" between the POS and ERPNext. It handles massive end-of-day offline sync bursts from the Flutter app, queueing them with idempotency (client_ref UUIDs) to feed into ERPNext sequentially.
+
+Flutter Offline POS: Used by market cashiers. Operates offline-first (SQLite/Drift), caching product/tax data.
+
+React/Vue Portal: The Government admin portal and MSME tax payment portal. This bypasses the Gateway and talks directly to the ERPNext API.
+
+Offline Sync Clarification (Crucial)
+The Flutter POS does not send a raw log of user clicks or actions. It calculates taxes locally, generates a finalized transaction record (sale, expense, loan repayment) with a client_ref (UUID v4), and saves it locally with synced = false. When online, it sends a batch array of these completed, finalized transactions to the Node.js Gateway.
+
+Database Schema Split (POS Backend vs. ERPNext Backend)
+The data models must be distributed between the Gateway (handling transient sync/auth) and ERPNext (the Master system of record):
+
+ERPNext Backend Tables (System of Record): users, msme_profiles, products, stock_movements, sales, sale_items, payments, customers, tax_config, susu_schemes, susu_members, susu_contributions, loans, loan_schedule, loan_repayments, expenses, audit_log.
+
+POS Backend Gateway Tables (Postgres 16): refresh_tokens (edge session management), sync_queue_logs (batch processing state and idempotency tracking), cached_tax_rates (read-only replica for fast POS distribution).
+
+Your Task & Workflow
+Your objective is to write the definitive "TriLiska POS Gateway Master System Architecture & PRD" section by section, providing the output directly in this chat using standard Markdown. Since our current development sprint is strictly focused on the POS Backend Gateway, the documentation must reflect its specific role as a middleware queue/BFF, rather than duplicating the core ERPNext logic.
 
 Terminology & Tone Constraint:
 You must strictly use the Ghanaian domain terminology found in the documents (e.g., GRA, Susu, TIN, Modified Tax System, NHIL, GETFund). Do not invent generic equivalents. Maintain a highly professional, authoritative, and concise tone appropriate for an Enterprise PRD. Use markdown tables and bullet points for scannability.
 
-Table of Contents:
+Table of Contents (Gateway-Focused):
 
-Executive Summary & Product Vision
+Executive Summary & Architecture Vision
 
-User Personas & Role Matrix
+System Actors & Authentication Flow (Edge JWTs & ERPNext SSO)
 
-High-Level System Architecture
+POS Gateway Responsibilities & Edge Logic (Caching, Rate Limiting, Validation)
 
-Core Platform Responsibilities
+Offline Sync Strategy & Queue Management (Idempotency, Batching)
 
-Feature Modules & Business Logic
+API Contracts & Payload Transformation (Mapping Flutter to ERPNext)
 
-Database Schema & Data Dictionary
+Gateway Database Schema
 
-Offline Sync Strategy & Conflict Resolution
+Error Handling, Dead Letter Queues, & Retry Mechanisms
 
-Security & Compliance
+Security & Infrastructure Compliance
 
-Sprint Plan & Delivery Milestones
+Tech Stack for this Sprint:
 
-Action Required NOW:
+POS App: Flutter 3.41.5 / Dart 3.11.3 with Drift (SQLite)
 
-Acknowledge these rules and confirm you understand the new architecture.
+POS Backend (Gateway): Node.js 24 (LTS) with Postgres 16
 
-Create the /docs directory if it does not exist.
+Master Platform: ERPNext
 
-Delegate to a subagent to draft Section 1 and Section 2.
-
-Write the results to docs/01_Executive_Summary.md and docs/02_User_Personas.md.
-
-Stop and ask for my approval before proceeding to Section 3.
+Sprint Plan & Delivery Milestones:
+Acknowledge these rules and confirm you understand the new architecture and the specific role of the Gateway.
+Create the /docs directory path conceptually.
+Write the results for the first two sections to docs/01_Executive_Summary.md and docs/02_System_Actors_Auth.md. Stop there and wait for my review before proceeding to the next sections.
