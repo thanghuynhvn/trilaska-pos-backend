@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: trilaska-postgres
+    environment:
+      POSTGRES_DB: trilaska_gateway
+      POSTGRES_USER: trilaska
+      POSTGRES_PASSWORD: trilaska_dev_password
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U trilaska -d trilaska_gateway']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:
